@@ -12,7 +12,7 @@ en:
                 3) multiply
                 4) divide
   invalid_operator: "Must choose 1, 2, 3 or 4"
-  processing_result: "%{operation_to_message} the two numbers..."
+  processing_result: "%{op_to_msg} the two numbers..."
   result: "The result is %{result}"
   again?: "Do you want to perform another calculation? (Y to calculate again)"
   thank_you: "Thank you for using the calculator. Good bye!"
@@ -30,7 +30,7 @@ es:
                 3) multiplicacion
                 4) division
   invalid_operator: "Debe elegir 1, 2, 3 o 4"
-  processing_result: "%{operation_to_message} los dos numeros..."
+  processing_result: "%{op_to_msg} los dos numeros..."
   result: "El resultado es %{result}"
   again?: "¿Desea realizar otro cálculo? (Y para calcular de nuevo)"
   thank_you: "Gracias por usar la calculadora. ¡Adiós!"

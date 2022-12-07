@@ -23,7 +23,7 @@ def valid_number?(num)
   integer?(num) || float?(num)
 end
 
-def operation_to_message(op)
+def op_to_msg(op)
   message = case op
             when '1'
               'Adding' if LANGUAGE == 'en'
@@ -45,7 +45,6 @@ end
 def messages(message, lang='eng')
   MESSAGES[lang][message]
 end
-
 
 prompt(messages('welcome', LANGUAGE))
 name = ''
@@ -104,7 +103,7 @@ loop do # main loop
     end
   end
 
-  prompt(format(messages("processing_result", LANGUAGE), operation_to_message: operation_to_message(operator)))
+  prompt(format(messages("processing_result", LANGUAGE), op_to_msg: op_to_msg(operator)))
 
   result = case operator
            when '1'
