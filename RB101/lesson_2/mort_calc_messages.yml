@@ -1,9 +1,9 @@
 welcome: |
-  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-  ★★★★★★★★ Welcome to the loan calculator! ★★★★★★★★
-  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★ Welcome to the mortage calculator! ★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
 loan_ammount: "Please enter the loan ammount"
 invalid_loan_ammount: "Please enter a valid loan ammount (any number grater than zero)"
@@ -18,6 +18,6 @@ invalid_loan_duration: "Please enter a valid loan duration (any number grater th
 monthly_pay: "The monthly pay is: %{monthly_pay}"
 again: "Would you like to use the mortage calculator again? (Y or N)"
 thank_you: |
-  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-  ★★★★ Thank you for using the loan calculator ★★★★
-  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★ Thank you for using the mortage calculator ★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
