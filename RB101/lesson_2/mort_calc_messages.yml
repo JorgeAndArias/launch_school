@@ -1,0 +1,23 @@
+welcome: |
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★ Welcome to the loan calculator! ★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+loan_ammount: "Please enter the loan ammount"
+invalid_loan_ammount: "Please enter a valid loan ammount (any number grater than zero)"
+ann_percent_rate: |
+  Please enter the annual percentage rate (APR):
+     (Do not include the % symbol)
+invalid_ann_percent_rate: "Please enter a valid annual percentage rate (any number grater than zero without the % symbol)"
+time_of_duration: "Is the duration of your loan in months(M) or years(Y)?:"
+invalid_time_of_duration: "Please type M for months or Y for years"
+loan_duration: "Please enter the loan duration:"
+invalid_loan_duration: "Please enter a valid loan duration (any number grater than zero)"
+monthly_pay: "The monthly pay is: %{monthly_pay}"
+again: "Would you like to use the mortage calculator again? (Y or N)"
+thank_you: |
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+  ★★★★ Thank you for using the loan calculator ★★★★
+  ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
