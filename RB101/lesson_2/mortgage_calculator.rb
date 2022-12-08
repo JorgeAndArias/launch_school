@@ -1,5 +1,5 @@
 =begin
-goal: Build a loan calcultor that takes 3 pieces of information
+goal: Build a mortgage calcultor that takes 3 pieces of information
 and returns the monthly payment
 
 Loan ammount, annual percentage rate, loan duration
