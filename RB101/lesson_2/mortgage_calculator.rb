@@ -37,9 +37,8 @@ def valid_number?(num)
 end
 
 def calc_month_pay(loan_amt, ann_perc_rate, loan_dur)
-  total =
-    loan_amt.to_i * (((ann_perc_rate.to_f / 100) / MONTHS_YEAR) /
-    (1 - (1 + ((ann_perc_rate.to_f / 100) / MONTHS_YEAR))**(-(loan_dur))))
+  apr_month = (ann_perc_rate.to_f / 100) / MONTHS_YEAR
+  total =loan_amt.to_i * ((apr_month) / (1 - (1 + (apr_month))**(-(loan_dur))))
   total.round(2)
 end
 
