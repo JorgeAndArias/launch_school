@@ -36,12 +36,6 @@ def valid_number?(num)
   (positive_integer?(num) || positive_float?(num))
 end
 
-def calc_month_pay(loan_amt, ann_perc_rate, loan_dur)
-  apr_month = (ann_perc_rate.to_f / 100) / MONTHS_YEAR
-  total =loan_amt.to_i * ((apr_month) / (1 - (1 + (apr_month))**(-(loan_dur))))
-  total.round(2)
-end
-
 def get_loan_ammount
   loan_ammount = nil
   loop do
@@ -56,6 +50,7 @@ def get_ann_percent_rate
   ann_percent_rate = nil
   loop do
     ann_percent_rate = gets.chomp
+    break if ann_percent_rate == '0'
     break if valid_number?(ann_percent_rate)
     prompt(MESSAGES['invalid_ann_percent_rate'])
   end
@@ -86,6 +81,17 @@ def get_loan_duration(time_dur)
     prompt(MESSAGES['invalid_loan_duration'])
   end
   loan_duration
+end
+
+def calc_month_pay(loan_amt, ann_perc_rate, loan_dur)
+  total =
+    if ann_perc_rate.to_f == 0
+      loan_amt.to_f / loan_dur
+    else
+      apr_month = (ann_perc_rate.to_f / 100) / MONTHS_YEAR
+      loan_amt.to_i * ((apr_month) / (1 - (1 + (apr_month))**(-(loan_dur))))
+    end
+  total.round(2)
 end
 
 puts MESSAGES['welcome']
