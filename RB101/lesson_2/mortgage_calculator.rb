@@ -42,54 +42,66 @@ def calc_month_pay(loan_amt, ann_perc_rate, loan_dur)
   total.round(2)
 end
 
-puts MESSAGES['welcome']
-
-loop do
+def get_loan_ammount
   loan_ammount = nil
-
-  prompt(MESSAGES['loan_ammount'])
-
   loop do
     loan_ammount = gets.chomp
     break if valid_number?(loan_ammount)
     prompt(MESSAGES['invalid_loan_ammount'])
   end
+  loan_ammount
+end
 
+def get_ann_percent_rate
   ann_percent_rate = nil
-
-  prompt(MESSAGES['ann_percent_rate'])
-
   loop do
     ann_percent_rate = gets.chomp
     break if valid_number?(ann_percent_rate)
     prompt(MESSAGES['invalid_ann_percent_rate'])
   end
+  ann_percent_rate
+end
 
+def get_time_duration
   time_duration = nil
-
-  prompt(MESSAGES['time_of_duration'])
-
   loop do
     time_duration = gets.chomp
     break if time_duration.downcase == 'm' || time_duration.downcase == 'y'
     prompt(MESSAGES['invalid_time_of_duration'])
   end
+  time_duration
+end
 
+def get_loan_duration(time_dur)
   loan_duration = nil
-
-  prompt(MESSAGES['loan_duration'])
-
   loop do
     loan_duration = gets.chomp
-    if valid_number?(loan_duration) && time_duration.downcase == 'm'
+    if valid_number?(loan_duration) && time_dur.downcase == 'm'
       loan_duration = loan_duration.to_i
       break
-    elsif valid_number?(loan_duration) && time_duration.downcase == 'y'
+    elsif valid_number?(loan_duration) && time_dur.downcase == 'y'
       loan_duration = loan_duration.to_i * MONTHS_YEAR
       break
     end
     prompt(MESSAGES['invalid_loan_duration'])
   end
+  loan_duration
+end
+
+puts MESSAGES['welcome']
+
+loop do
+  prompt(MESSAGES['loan_ammount'])
+  loan_ammount = get_loan_ammount()
+
+  prompt(MESSAGES['ann_percent_rate'])
+  ann_percent_rate = get_ann_percent_rate()
+
+  prompt(MESSAGES['time_of_duration'])
+  time_duration = get_time_duration()
+
+  prompt(MESSAGES['loan_duration'])
+  loan_duration = get_loan_duration(time_duration)
 
   monthly_pay = calc_month_pay(loan_ammount, ann_percent_rate, loan_duration)
 
