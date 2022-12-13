@@ -1,29 +1,56 @@
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
-RULES = {
-  rock: {
-    win_against: ['lizard', 'scissors']
-  },
-  paper: {
-    win_against: ['rock', 'spock']
-  },
-  scissors: {
-    win_against: ['lizard', 'paper']
-  },
-  lizard: {
-    win_against: ['paper', 'spock']
-  },
-  spock: {
-    win_against: ['scissors', 'rock']
-  }
+WINNING_RULES = {
+  rock: ['lizard', 'scissors'],
+  paper: ['rock', 'spock'],
+  scissors: ['lizard', 'paper'],
+  spock: ['scissors', 'rock'],
+  lizard: ['paper', 'spock']
 }
+
+CHOICE_SHORT_TO_LONG = {
+  r: 'rock',
+  p: 'paper',
+  sc: 'scissors',
+  sp: 'spock',
+  l: 'lizard'
+}
+
+INITIAL_MESSAGE = <<-MESSAGE
+  ***************************************************
+  *** WELCOME TO ROCK PAPER SCISSORS SPOCK LIZARD ***
+  ***************************************************
+  Rules:
+  - You'll be competing against the computer
+  - First to 3 is the absolute winner!
+  Who wins?
+  - Scissors cuts Paper
+  - Paper covers Rock
+  - Rock crushes Lizard
+  - Lizard poisons Spock
+  - Spock smashes Scissors
+  - Scissors decapitates Lizard
+  - Lizard eats Paper
+  - Paper disproves Spock
+  - Spock vaporizes Rock
+  - Rock crushes Scissors
+MESSAGE
+
+CHOICE_MESSAGE = <<-MESSAGE
+Choose one:
+  r for rock
+  p for paper
+  sc for scissors
+  sp for spock
+  l for lizard
+MESSAGE
 
 def prompt(message)
   puts "=> #{message}"
 end
 
 def win?(first, second)
-  RULES[first.to_sym][:win_against].include?(second)
+  WINNING_RULES[first.to_sym].include?(second)
 end
 
 def display_results(player, computer)
@@ -36,17 +63,48 @@ def display_results(player, computer)
   end
 end
 
+def update_score(player, computer, score_hash)
+  if win?(player, computer)
+    score_hash[:user] += 1
+  elsif win?(computer, player)
+    score_hash[:computer] += 1
+  end
+end
+
+def display_score(score_hash)
+  prompt(
+    "Current match count:
+    You: #{score_hash[:user]}
+    Computer: #{score_hash[:computer]}"
+  )
+end
+
+def display_winner(score_hash)
+  if score_hash[:user] == 3
+    prompt("You are the absolute winner!")
+  else
+    prompt("The computer is the absolute winner!")
+  end
+end
+
+puts `clear`
+
+puts INITIAL_MESSAGE
+
 loop do
   choice = ''
-  user_wins = 0
-  computer_wins = 0
+  score_counter = {
+    user: 0,
+    computer: 0
+  }
 
-  until user_wins == 3 || computer_wins == 3
+  until score_counter[:user] == 3 || score_counter[:computer] == 3
     loop do
-      prompt("Choose one: #{VALID_CHOICES.join(', ')}")
+      prompt(CHOICE_MESSAGE)
       choice = gets.chomp
 
-      if VALID_CHOICES.include?(choice.downcase)
+      if CHOICE_SHORT_TO_LONG.keys.include?(choice.downcase.to_sym)
+        choice = CHOICE_SHORT_TO_LONG[choice.downcase.to_sym]
         break
       else
         prompt("That's not a valid choice.")
@@ -54,23 +112,16 @@ loop do
     end
 
     computer_choice = VALID_CHOICES.sample
-
     prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
-
     display_results(choice, computer_choice)
-
-    if win?(choice, computer_choice)
-      user_wins += 1
-    elsif win?(computer_choice, choice)
-      computer_wins += 1
-    end
-
-    prompt("Current match count: user: #{user_wins} - pc: #{computer_wins}")
+    update_score(choice, computer_choice, score_counter)
+    display_score(score_counter)
   end
 
+  display_winner(score_counter)
   prompt("Do you want to play again?")
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
 end
 
-prompt("Thank you for playing. Good bye!")
+prompt("Thank you for playing RPSSL!")
