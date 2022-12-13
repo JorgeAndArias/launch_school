@@ -65,7 +65,7 @@ end
 
 def update_score(player, computer, score_hash)
   if win?(player, computer)
-    score_hash[:user] += 1
+    score_hash[:player] += 1
   elsif win?(computer, player)
     score_hash[:computer] += 1
   end
@@ -74,13 +74,13 @@ end
 def display_score(score_hash)
   prompt(
     "Current match count:
-    You: #{score_hash[:user]}
+    You: #{score_hash[:player]}
     Computer: #{score_hash[:computer]}"
   )
 end
 
 def display_winner(score_hash)
-  if score_hash[:user] == 3
+  if score_hash[:player] == 3
     prompt("You are the absolute winner!")
   else
     prompt("The computer is the absolute winner!")
@@ -94,11 +94,11 @@ puts INITIAL_MESSAGE
 loop do
   choice = ''
   score_counter = {
-    user: 0,
+    player: 0,
     computer: 0
   }
 
-  until score_counter[:user] == 3 || score_counter[:computer] == 3
+  until score_counter[:player] == 3 || score_counter[:computer] == 3
     loop do
       prompt(CHOICE_MESSAGE)
       choice = gets.chomp
