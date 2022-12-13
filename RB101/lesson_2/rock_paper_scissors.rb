@@ -36,13 +36,12 @@ def display_results(player, computer)
   end
 end
 
-user_wins = 0
-computer_wins = 0
-
 loop do
   choice = ''
+  user_wins = 0
+  computer_wins = 0
 
-  until user_wins == 3 || computer_wins == 3 do
+  until user_wins == 3 || computer_wins == 3
     loop do
       prompt("Choose one: #{VALID_CHOICES.join(', ')}")
       choice = gets.chomp
@@ -66,7 +65,7 @@ loop do
       computer_wins += 1
     end
 
-    prompt("user: #{user_wins} pc: #{computer_wins}")
+    prompt("Current match count: user: #{user_wins} - pc: #{computer_wins}")
   end
 
   prompt("Do you want to play again?")
