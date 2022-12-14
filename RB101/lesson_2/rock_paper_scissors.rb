@@ -167,7 +167,8 @@ loop do
   end
 
   display_winner(score_count)
-  prompt("Do you want to play again?")
+  prompt("Do you want to play again?
+  (Type yes or y to continue or any other key to exit)")
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
   clear_terminal()
