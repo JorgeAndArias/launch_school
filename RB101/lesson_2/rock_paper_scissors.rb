@@ -163,7 +163,6 @@ loop do
 
   play_round(score_count)
   display_winner(score_count)
-  play_again?()
   prompt("Do you want to play again?
   (Type yes or y to continue or any other key to exit)")
   answer = gets.chomp
