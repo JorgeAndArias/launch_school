@@ -127,30 +127,33 @@ def display_round_results(player, computer, score_hash)
   display_score(score_hash)
 end
 
+def get_player_choice
+  choice = nil
+  loop do
+    prompt(CHOICE_MESSAGE)
+    choice = gets.chomp
+    if valid_choice?(choice)
+      choice = return_long_form_choice(choice)
+      break
+    else
+      prompt("That's not a valid choice.")
+    end
+  end
+  choice
+end
+
 clear_terminal()
 
 puts INITIAL_MESSAGE
 
 loop do
-  choice = ''
   score_count = {
     player: 0,
     computer: 0
   }
 
   until score_count[:player] == WINS_NEED || score_count[:computer] == WINS_NEED
-    loop do
-      prompt(CHOICE_MESSAGE)
-      choice = gets.chomp
-
-      if valid_choice?(choice)
-        choice = return_long_form_choice(choice)
-        break
-      else
-        prompt("That's not a valid choice.")
-      end
-    end
-
+    choice = get_player_choice()
     computer_choice = VALID_CHOICES.sample
     update_score(choice, computer_choice, score_count)
     display_round_results(choice, computer_choice, score_count)
