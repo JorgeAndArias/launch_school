@@ -2,7 +2,7 @@ require 'pry'
 
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
-WINS_NEEDED = 3
+WINS_NEED = 3
 
 MOVES = {
   rock: {
@@ -64,12 +64,16 @@ Choose one:
   l for lizard
 MESSAGE
 
+def clear_terminal
+  puts `clear`
+end
+
 def prompt(message)
   puts "=> #{message}"
 end
 
 def win?(first, second)
-  MOVES[first.to_sym].include?(second)
+  MOVES[first.to_sym][:beats].include?(second)
 end
 
 def display_results(player, computer)
@@ -99,43 +103,58 @@ def display_score(score_hash)
 end
 
 def display_winner(score_hash)
-  if score_hash[:player] == WINS_NEEDED
+  if score_hash[:player] == WINS_NEED
     prompt("You are the absolute winner!")
   else
     prompt("The computer is the absolute winner!")
   end
 end
 
-def valid_choice?(choice)
-  is_valid = nil
+def valid_choice?(player)
   MOVES.each_key do |k|
-    if MOVES[k][:abbreviation] == choice || k == choice.to_sym
-      is_valid = true
-      break
-    else
-      is_valid = false
+    if MOVES[k][:abbreviation] == player.downcase || k == player.downcase.to_sym
+      return true
+    end
+  end
+  false
+end
+
+def return_long_form_choice(player)
+  if MOVES.keys.include?(player.downcase.to_sym)
+    player.downcase
+  else
+    MOVES.each_key do |k|
+      if MOVES[k][:abbreviation] == player.downcase
+        return k.to_s
+      end
     end
   end
 end
 
-puts `clear`
+def display_round_results(player, computer, score_hash)
+  prompt("You chose: #{player}; Computer chose: #{computer}")
+  display_results(player, computer)
+  display_score(score_hash)
+end
+
+clear_terminal()
 
 puts INITIAL_MESSAGE
 
 loop do
   choice = ''
-  score_counter = {
+  score_count = {
     player: 0,
     computer: 0
   }
 
-  until score_counter[:player] == WINS_NEEDED || score_counter[:computer] == WINS_NEEDED
+  until score_count[:player] == WINS_NEED || score_count[:computer] == WINS_NEED
     loop do
       prompt(CHOICE_MESSAGE)
       choice = gets.chomp
 
-      if valid_choice?
-        choice = CHOICE_SHORT_TO_LONG[choice.downcase.to_sym]
+      if valid_choice?(choice)
+        choice = return_long_form_choice(choice)
         break
       else
         prompt("That's not a valid choice.")
@@ -143,16 +162,15 @@ loop do
     end
 
     computer_choice = VALID_CHOICES.sample
-    prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
-    display_results(choice, computer_choice)
-    update_score(choice, computer_choice, score_counter)
-    display_score(score_counter)
+    update_score(choice, computer_choice, score_count)
+    display_round_results(choice, computer_choice, score_count)
   end
 
-  display_winner(score_counter)
+  display_winner(score_count)
   prompt("Do you want to play again?")
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
+  clear_terminal()
 end
 
 prompt("Thank you for playing RPSSL!")
