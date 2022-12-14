@@ -1,20 +1,39 @@
+require 'pry'
+
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
-WINNING_RULES = {
-  rock: ['lizard', 'scissors'],
-  paper: ['rock', 'spock'],
-  scissors: ['lizard', 'paper'],
-  spock: ['scissors', 'rock'],
-  lizard: ['paper', 'spock']
+WINS_NEEDED = 3
+
+MOVES = {
+  rock: {
+    beats: ['lizard', 'scissors'],
+    abbreviation: 'r'
+  },
+  paper: {
+    beats: ['rock', 'spock'],
+    abbreviation: 'p'
+  },
+  scissors: {
+    beats: ['lizard', 'paper'],
+    abbreviation: 'sc'
+  },
+  spock: {
+    beats: ['scissors', 'rock'],
+    abbreviation: 'sp'
+  },
+  lizard: {
+    beats: ['paper', 'spock'],
+    abbreviation: 'l'
+  }
 }
 
-CHOICE_SHORT_TO_LONG = {
-  r: 'rock',
-  p: 'paper',
-  sc: 'scissors',
-  sp: 'spock',
-  l: 'lizard'
-}
+# CHOICE_SHORT_TO_LONG = {
+#   r: 'rock',
+#   p: 'paper',
+#   sc: 'scissors',
+#   sp: 'spock',
+#   l: 'lizard'
+# }
 
 INITIAL_MESSAGE = <<-MESSAGE
   ***************************************************
@@ -50,7 +69,7 @@ def prompt(message)
 end
 
 def win?(first, second)
-  WINNING_RULES[first.to_sym].include?(second)
+  MOVES[first.to_sym].include?(second)
 end
 
 def display_results(player, computer)
@@ -80,10 +99,22 @@ def display_score(score_hash)
 end
 
 def display_winner(score_hash)
-  if score_hash[:player] == 3
+  if score_hash[:player] == WINS_NEEDED
     prompt("You are the absolute winner!")
   else
     prompt("The computer is the absolute winner!")
+  end
+end
+
+def valid_choice?(choice)
+  is_valid = nil
+  MOVES.each_key do |k|
+    if MOVES[k][:abbreviation] == choice || k == choice.to_sym
+      is_valid = true
+      break
+    else
+      is_valid = false
+    end
   end
 end
 
@@ -98,12 +129,12 @@ loop do
     computer: 0
   }
 
-  until score_counter[:player] == 3 || score_counter[:computer] == 3
+  until score_counter[:player] == WINS_NEEDED || score_counter[:computer] == WINS_NEEDED
     loop do
       prompt(CHOICE_MESSAGE)
       choice = gets.chomp
 
-      if CHOICE_SHORT_TO_LONG.keys.include?(choice.downcase.to_sym)
+      if valid_choice?
         choice = CHOICE_SHORT_TO_LONG[choice.downcase.to_sym]
         break
       else
