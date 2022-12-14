@@ -1,5 +1,3 @@
-require 'pry'
-
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
 WINS_NEED = 3
@@ -26,14 +24,6 @@ MOVES = {
     abbreviation: 'l'
   }
 }
-
-# CHOICE_SHORT_TO_LONG = {
-#   r: 'rock',
-#   p: 'paper',
-#   sc: 'scissors',
-#   sp: 'spock',
-#   l: 'lizard'
-# }
 
 INITIAL_MESSAGE = <<-MESSAGE
   ***************************************************
