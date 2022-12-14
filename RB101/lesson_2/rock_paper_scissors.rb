@@ -142,7 +142,7 @@ def get_player_choice
   choice
 end
 
-def play_round(score_hash)
+def play_match(score_hash)
   until score_hash[:player] == WINS_NEED || score_hash[:computer] == WINS_NEED
     choice = get_player_choice()
     computer_choice = VALID_CHOICES.sample
@@ -161,7 +161,7 @@ loop do
     computer: 0
   }
 
-  play_round(score_count)
+  play_match(score_count)
   display_winner(score_count)
   prompt("Do you want to play again?
   (Type yes or y to continue or any other key to exit)")
