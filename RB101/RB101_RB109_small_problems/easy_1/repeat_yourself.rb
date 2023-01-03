@@ -13,9 +13,18 @@ Hello
 Hello
 
 Rules:
-- Method should take 2 arguments (string and an integer)
-- The integer of the second argument must be positive
-- The method should print the argument string as many times as the second argument
+  Explicit:
+  - Method should take 2 arguments (string and an integer)
+  - The integer of the second argument must be positive
+  - The method should print the argument string as many times as the second argument
+
+  Implicit:
+    - String to be printed in separate lines
+
+Questions:
+- Do we need to worry about validations?
+  - first argument not being a string
+  - second argument not being a positive integer?
 
 EXAMPLES
 repeat('Hello', 3)
@@ -31,7 +40,8 @@ Output:
 Second argument must be a positive integer (grater than zero)
 
 DATA STRUCTURES
-strings
+Input: string, integer
+Output: String(s)
 
 ALGORITHM
 - create a method called repeat that takes 2 arguments (string, repetion_times)
