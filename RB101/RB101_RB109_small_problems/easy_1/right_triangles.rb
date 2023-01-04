@@ -44,19 +44,17 @@ A
   - create an array from 1 to num
   - To create the triangle it should follow the following logic
     num = 3
-    array = [1, 2, 3]
-    - first row array[] whitespaces and num - whitespaces stars
-      - line 1:
-        whitespaces = num - array[0] # 2
-        stars = array[0] # 1
-      - line 2:
-        whitespaces = num - array[1] # 1
-        stars = array[1] # 2
-      - line 3:
-        whitespaces = num - array[2] # 0
-        stars = array[2] # 3
+    create an array that contains the stars per line
+    - line 1:
+      whitespaces = num - array[0] # 2
+      stars = array[0] # 1
+    - line 2:
+      whitespaces = num - array[1] # 1
+      stars = array[1] # 2
+    - line 3:
+      whitespaces = num - array[2] # 0
+      stars = array[2] # 3
 =end
-
 
 def triangle(number)
   stars_per_line = (1..number).to_a
@@ -70,6 +68,21 @@ def triangle(number)
 end
 
 # triangle(8)
+
+# suggested solution
+
+def suggested_triangle(side)
+  stars = 1
+  spaces = side - 1
+
+  side.times do
+    puts (' ' * spaces) + ('*' * stars)
+    stars += 1
+    spaces -= 1
+  end
+end
+
+# suggested_triangle(8)
 
 =begin
 Further Exploration
@@ -87,7 +100,7 @@ def upside_down_triangle(number)
   puts triangle.reverse
 end
 
-upside_down_triangle(8)
+# upside_down_triangle(8)
 
 =begin
 Further Exploration
