@@ -57,16 +57,44 @@ def board_full?(brd)
 end
 
 def someone_won?(brd)
-  false
+  !!detect_winner(brd)
+end
+
+def detect_winner(brd)
+  winning_lines = [[1, 2, 3], [4, 5, 6], [7, 8 ,9]] +
+                  [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
+                  [[1, 5, 9], [3, 5, 7]]
+
+  winning_lines.each do |line|
+    if brd[line[0]] == PLAYER_MARKER &&
+       brd[line[1]] == PLAYER_MARKER &&
+       brd[line[2]] == PLAYER_MARKER
+       return 'Player'
+    elsif brd[line[0]] == COMPUTER_MARKER &&
+       brd[line[1]] == COMPUTER_MARKER &&
+       brd[line[2]] == COMPUTER_MARKER
+      return 'Computer'
+    end
+  end
+  nil
 end
 
 board = initialize_board
-display_board(board)
 
 loop do
-  player_places_piece!(board)
-  comouter_places_piece!(board)
   display_board(board)
 
+  player_places_piece!(board)
   break if someone_won?(board) || board_full?(board)
+
+  comouter_places_piece!(board)
+  break if someone_won?(board) || board_full?(board)
+end
+
+display_board(board)
+
+if someone_won?(board)
+  prompt "#{detect_winner(board)} won!"
+else
+  prompt "It's a tie!"
 end
