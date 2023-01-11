@@ -7,6 +7,7 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+GAMES_TO_WIN = 2
 
 def prompt(text)
   puts "=> #{text}"
@@ -29,9 +30,10 @@ def joinor(arr, delimiter=',', last_delimiter='or')
   result
 end
 
-def display_board(brd)
+def display_board(brd, scores_hash)
   system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
+  display_scores(scores_hash)
   puts ""
   puts "     |     |"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
@@ -102,11 +104,29 @@ def detect_winner(brd)
   nil
 end
 
+def update_score(scores_hash, winner)
+  scores_hash[winner] += 1
+end
+
+def display_scores(scores_hash)
+  puts "Scores:"
+  scores_hash.each { |user, score| prompt "#{user}: #{score}"}
+end
+
+def game_winner?(scores_hash)
+  scores_hash.values.include?(GAMES_TO_WIN)
+end
+
+scores = {
+    'Player' => 0,
+    'Computer' => 0
+  }
+
 loop do
   board = initialize_board
 
   loop do
-    display_board(board)
+    display_board(board, scores)
 
     player_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
@@ -115,17 +135,27 @@ loop do
     break if someone_won?(board) || board_full?(board)
   end
 
-  display_board(board)
+  display_board(board, scores)
 
   if someone_won?(board)
-    prompt "#{detect_winner(board)} won!"
+    winner = detect_winner(board)
+    prompt "#{winner} won the round!"
+    update_score(scores, winner)
   else
     prompt "It's a tie!"
   end
 
-  prompt "Play again? (y or n)"
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  if game_winner?(scores)
+    prompt "#{detect_winner(board)} won the game!"
+    prompt "Play again? (y or n)"
+    answer = gets.chomp
+    break unless answer.downcase.start_with?('y')
+  else
+    prompt "Get ready for the next round!"
+  end
+
+  # Add sleep so the round result is visible before clearing the screen
+  sleep(2)
 end
 
 prompt "Thanks for playing Tic Tac Toe! Good bye!"
