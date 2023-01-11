@@ -12,18 +12,23 @@ def prompt(text)
   puts "=> #{text}"
 end
 
-def joinor(arr, separator=', ', last_separator='or')
-  case arr.size
-  when 0 then ''
-  when 1 then arr.first.to_s
-  when 2 then arr.join(" #{last_separator} ")
-  else
-    arr[-1] = "#{last_separator} #{arr.last}"
-    arr.join(separator)
+# rubocop:disable Metrics/AbcSize
+def joinor(arr, delimiter=',', last_delimiter='or')
+  result = ''
+  arr.each do |element|
+    result << if arr.size == 1
+                return arr.first.to_s
+              elsif arr.size == 2
+                return "#{arr.first} #{last_delimiter} #{arr.last}"
+              elsif element == arr.last
+                last_delimiter + " " + element.to_s
+              else
+                element.to_s + delimiter + " "
+              end
   end
+  result
 end
 
-# rubocop:disable Metrics/AbcSize
 def display_board(brd)
   system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
