@@ -7,7 +7,7 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-GAMES_TO_WIN = 2
+GAMES_TO_WIN = 5
 
 def prompt(text)
   puts "=> #{text}"
@@ -71,21 +71,50 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def find_best_def_move(brd, potential_winning_line)
-  potential_winning_line.select { |position| brd[position] == INITIAL_MARKER}.first
+def find_best_move(brd, potential_winning_line)
+  best_moves = potential_winning_line.select do |position|
+    brd[position] == INITIAL_MARKER
+  end
+  best_moves.first
+end
+
+def computer_potential_loss?(brd, positions)
+  brd.values_at(*positions).count(PLAYER_MARKER) == 2 &&
+    brd.values_at(*positions).count(INITIAL_MARKER) == 1
+end
+
+def computer_potential_win?(brd, positions)
+  brd.values_at(*positions).count(COMPUTER_MARKER) == 2 &&
+    brd.values_at(*positions).count(INITIAL_MARKER) == 1
 end
 
 def computer_places_piece!(brd)
+  square = nil
+
+  # Offense
   WINNING_LINES.each do |line|
-    p line
-    if brd.values_at(*line).count(PLAYER_MARKER) == 2 && brd.values_at(*line).count(INITIAL_MARKER) == 1
-      square = find_best_def_move(brd, line)
-      brd[square] = COMPUTER_MARKER
-      return
+    if computer_potential_win?(brd, line)
+      square = find_best_move(brd, line)
+      break if square
     end
   end
+
+  # Defense
+  if !square
+    WINNING_LINES.each do |line|
+      if computer_potential_loss?(brd, line)
+        square = find_best_move(brd, line)
+        break if square
+      end
+    end
+  end
+
+  # Any square
+  if !square
     square = empty_squares(brd).sample
-    brd[square] = COMPUTER_MARKER
+  end
+
+  brd[square] = COMPUTER_MARKER
 end
 
 def board_full?(brd)
@@ -122,7 +151,7 @@ end
 
 def display_scores(scores_hash)
   puts "Scores:"
-  scores_hash.each { |user, score| prompt "#{user}: #{score}"}
+  scores_hash.each { |user, score| prompt "#{user}: #{score}" }
 end
 
 def game_winner?(scores_hash)
@@ -130,9 +159,9 @@ def game_winner?(scores_hash)
 end
 
 scores = {
-    'Player' => 0,
-    'Computer' => 0
-  }
+  'Player' => 0,
+  'Computer' => 0
+}
 
 loop do
   board = initialize_board
