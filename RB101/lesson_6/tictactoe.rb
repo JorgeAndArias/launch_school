@@ -31,7 +31,7 @@ def joinor(arr, delimiter=',', last_delimiter='or')
 end
 
 def display_board(brd, scores_hash)
-  system 'clear'
+  # system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
   display_scores(scores_hash)
   puts ""
@@ -71,9 +71,21 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def comouter_places_piece!(brd)
-  square = empty_squares(brd).sample
-  brd[square] = COMPUTER_MARKER
+def find_best_def_move(brd, potential_winning_line)
+  potential_winning_line.select { |position| brd[position] == INITIAL_MARKER}.first
+end
+
+def computer_places_piece!(brd)
+  WINNING_LINES.each do |line|
+    p line
+    if brd.values_at(*line).count(PLAYER_MARKER) == 2 && brd.values_at(*line).count(INITIAL_MARKER) == 1
+      square = find_best_def_move(brd, line)
+      brd[square] = COMPUTER_MARKER
+      return
+    end
+  end
+    square = empty_squares(brd).sample
+    brd[square] = COMPUTER_MARKER
 end
 
 def board_full?(brd)
@@ -131,7 +143,7 @@ loop do
     player_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
 
-    comouter_places_piece!(board)
+    computer_places_piece!(board)
     break if someone_won?(board) || board_full?(board)
   end
 
