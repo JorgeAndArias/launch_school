@@ -28,8 +28,6 @@ def joinor(arr, separator=',', last_separator='or')
   result
 end
 
-binding.pry
-
 # rubocop:disable Metrics/AbcSize
 def display_board(brd)
   system 'clear'
