@@ -15,7 +15,11 @@ end
 def joinor(arr, separator=',', last_separator='or')
   result = ''
   arr.each do |element|
-    result << if element == arr.last
+    result << if arr.size == 1
+                return arr[0].to_s
+              elsif arr.size == 2
+                return arr[0].to_s + " " + last_separator + " " + arr[1].to_s
+              elsif element == arr.last
                 last_separator + " " + element.to_s
               else
                 element.to_s + separator + " "
@@ -24,7 +28,7 @@ def joinor(arr, separator=',', last_separator='or')
   result
 end
 
-joinor([1, 2, 3, 4, 5])
+binding.pry
 
 # rubocop:disable Metrics/AbcSize
 def display_board(brd)
