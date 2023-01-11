@@ -7,7 +7,7 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-GAMES_TO_WIN = 5
+GAMES_TO_WIN = 1
 
 def prompt(text)
   puts "=> #{text}"
@@ -75,7 +75,7 @@ def find_best_move(brd, potential_winning_line)
   best_moves = potential_winning_line.select do |position|
     brd[position] == INITIAL_MARKER
   end
-  best_moves.first
+  best_moves.sample
 end
 
 def computer_potential_loss?(brd, positions)
@@ -88,6 +88,7 @@ def computer_potential_win?(brd, positions)
     brd.values_at(*positions).count(INITIAL_MARKER) == 1
 end
 
+# rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
 def computer_places_piece!(brd)
   square = nil
 
@@ -109,6 +110,11 @@ def computer_places_piece!(brd)
     end
   end
 
+  # Pick square 5
+  if !square && empty_squares(brd).include?(5)
+    square = 5
+  end
+
   # Any square
   if !square
     square = empty_squares(brd).sample
@@ -116,6 +122,7 @@ def computer_places_piece!(brd)
 
   brd[square] = COMPUTER_MARKER
 end
+# rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
 
 def board_full?(brd)
   empty_squares(brd).empty?
@@ -127,15 +134,6 @@ end
 
 def detect_winner(brd)
   WINNING_LINES.each do |line|
-    # if brd[line[0]] == PLAYER_MARKER &&
-    #    brd[line[1]] == PLAYER_MARKER &&
-    #    brd[line[2]] == PLAYER_MARKER
-    #   return 'Player'
-    # elsif brd[line[0]] == COMPUTER_MARKER &&
-    #       brd[line[1]] == COMPUTER_MARKER &&
-    #       brd[line[2]] == COMPUTER_MARKER
-    #   return 'Computer'
-    # end
     if brd.values_at(*line).count(PLAYER_MARKER) == 3
       return 'Player'
     elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
@@ -158,22 +156,49 @@ def game_winner?(scores_hash)
   scores_hash.values.include?(GAMES_TO_WIN)
 end
 
-scores = {
-  'Player' => 0,
-  'Computer' => 0
-}
+def who_goes_first
+  first_turn = nil
+  loop do
+    prompt "Who should go first?"
+    puts "1. I go first!"
+    puts "2. Computer can go first!"
+    puts "3. I can't decide. Choose for me!"
+    choice = gets.chomp.to_i
+    first_turn = case choice
+                 when 1 then 'player'
+                 when 2 then 'computer'
+                 when 3 then %w(player computer).sample
+                 end
+    break if first_turn
+    prompt "Sorry, that's not a valid choice."
+  end
+  first_turn
+end
 
 loop do
+  scores = {
+  'Player' => 0,
+  'Computer' => 0
+  }
   board = initialize_board
+  first_turn = who_goes_first
 
   loop do
-    display_board(board, scores)
+    if first_turn == 'player'
+      display_board(board, scores)
+      player_places_piece!(board)
+      break if someone_won?(board) || board_full?(board)
 
-    player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
+      computer_places_piece!(board)
+      break if someone_won?(board) || board_full?(board)
+    else
+      computer_places_piece!(board)
+      break if someone_won?(board) || board_full?(board)
+      display_board(board, scores)
 
-    computer_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
+      player_places_piece!(board)
+      break if someone_won?(board) || board_full?(board)
+    end
   end
 
   display_board(board, scores)
