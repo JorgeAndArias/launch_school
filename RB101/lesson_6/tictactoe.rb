@@ -12,20 +12,15 @@ def prompt(text)
   puts "=> #{text}"
 end
 
-def joinor(arr, separator=',', last_separator='or')
-  result = ''
-  arr.each do |element|
-    result << if arr.size == 1
-                return arr[0].to_s
-              elsif arr.size == 2
-                return arr[0].to_s + " " + last_separator + " " + arr[1].to_s
-              elsif element == arr.last
-                last_separator + " " + element.to_s
-              else
-                element.to_s + separator + " "
-              end
+def joinor(arr, separator=', ', last_separator='or')
+  case arr.size
+  when 0 then ''
+  when 1 then arr.first.to_s
+  when 2 then arr.join(" #{last_separator} ")
+  else
+    arr[-1] = "#{last_separator} #{arr.last}"
+    arr.join(separator)
   end
-  result
 end
 
 # rubocop:disable Metrics/AbcSize
