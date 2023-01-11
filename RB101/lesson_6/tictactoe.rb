@@ -7,7 +7,7 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-GAMES_TO_WIN = 1
+GAMES_TO_WIN = 5
 
 def prompt(text)
   puts "=> #{text}"
@@ -143,7 +143,7 @@ def detect_winner(brd)
   nil
 end
 
-def update_score(scores_hash, winner)
+def update_score!(scores_hash, winner)
   scores_hash[winner] += 1
 end
 
@@ -175,46 +175,56 @@ def who_goes_first
   first_turn
 end
 
-loop do
-  scores = {
-  'Player' => 0,
-  'Computer' => 0
-  }
-  board = initialize_board
-  first_turn = who_goes_first
-
-  loop do
-    if first_turn == 'player'
-      display_board(board, scores)
-      player_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
-
-      computer_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
-    else
-      computer_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
-      display_board(board, scores)
-
-      player_places_piece!(board)
-      break if someone_won?(board) || board_full?(board)
-    end
+def place_piece!(board, player_turn)
+  if player_turn == 'player'
+    player_places_piece!(board)
+  else
+    computer_places_piece!(board)
   end
+end
 
-  display_board(board, scores)
+def alternate_player(current_player)
+  %w(player computer).reject { |user| user == current_player }.first
+end
 
-  if someone_won?(board)
-    winner = detect_winner(board)
+def display_round_result(brd, scores_hash)
+  if someone_won?(brd)
+    winner = detect_winner(brd)
     prompt "#{winner} won the round!"
-    update_score(scores, winner)
   else
     prompt "It's a tie!"
   end
+end
+
+def reset_scores!(scores_hash)
+  scores_hash.each_key { |user| scores_hash[user] = 0 }
+end
+
+scores = {
+    'Player' => 0,
+    'Computer' => 0
+  }
+
+loop do
+  board = initialize_board
+  current_player = who_goes_first
+
+  loop do
+    display_board(board, scores)
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
+    break if someone_won?(board) || board_full?(board)
+  end
+
+  display_board(board, scores)
+  display_round_result(board, scores)
+  update_score!(scores, detect_winner(board))
 
   if game_winner?(scores)
     prompt "#{detect_winner(board)} won the game!"
     prompt "Play again? (y or n)"
     answer = gets.chomp
+    reset_scores!(scores)
     break unless answer.downcase.start_with?('y')
   else
     prompt "Get ready for the next round!"
