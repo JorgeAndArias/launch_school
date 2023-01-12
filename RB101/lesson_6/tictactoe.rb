@@ -7,7 +7,14 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-GAMES_TO_WIN = 5
+GAMES_TO_WIN = 2
+
+scores = {
+  'Player' => 0,
+  'Computer' => 0
+}
+
+first_game = true
 
 def prompt(text)
   puts "=> #{text}"
@@ -31,7 +38,7 @@ def joinor(arr, delimiter=',', last_delimiter='or')
 end
 
 def display_board(brd, scores_hash)
-  # system 'clear'
+  system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
   display_scores(scores_hash)
   puts ""
@@ -88,7 +95,7 @@ def computer_potential_win?(brd, positions)
     brd.values_at(*positions).count(INITIAL_MARKER) == 1
 end
 
-# rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 def computer_places_piece!(brd)
   square = nil
 
@@ -122,7 +129,7 @@ def computer_places_piece!(brd)
 
   brd[square] = COMPUTER_MARKER
 end
-# rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 def board_full?(brd)
   empty_squares(brd).empty?
@@ -144,7 +151,7 @@ def detect_winner(brd)
 end
 
 def update_score!(scores_hash, winner)
-  scores_hash[winner] += 1
+  scores_hash[winner] += 1 if winner
 end
 
 def display_scores(scores_hash)
@@ -156,7 +163,9 @@ def game_winner?(scores_hash)
   scores_hash.values.include?(GAMES_TO_WIN)
 end
 
-def who_goes_first
+# rubocop:disable Metrics/MethodLength
+def who_goes_first(first_time)
+  system 'clear' if !first_time
   first_turn = nil
   loop do
     prompt "Who should go first?"
@@ -174,6 +183,7 @@ def who_goes_first
   end
   first_turn
 end
+# rubocop:enable Metrics/MethodLength
 
 def place_piece!(board, player_turn)
   if player_turn == 'player'
@@ -187,7 +197,7 @@ def alternate_player(current_player)
   %w(player computer).reject { |user| user == current_player }.first
 end
 
-def display_round_result(brd, scores_hash)
+def display_round_result(brd)
   if someone_won?(brd)
     winner = detect_winner(brd)
     prompt "#{winner} won the round!"
@@ -200,14 +210,25 @@ def reset_scores!(scores_hash)
   scores_hash.each_key { |user| scores_hash[user] = 0 }
 end
 
-scores = {
-    'Player' => 0,
-    'Computer' => 0
-  }
+def display_welcome_message
+  system 'clear'
+  message = <<-WELCOME
+  ***********************************
+  ******Welcome to Tic Tac Toe!******
+  ***********************************
+
+  The first player to reach #{GAMES_TO_WIN} wins will win the game.
+
+  Have fun!
+  -----------------------------------
+  WELCOME
+  puts message
+end
 
 loop do
+  display_welcome_message if first_game
   board = initialize_board
-  current_player = who_goes_first
+  current_player = who_goes_first(first_game)
 
   loop do
     display_board(board, scores)
@@ -217,14 +238,17 @@ loop do
   end
 
   display_board(board, scores)
-  display_round_result(board, scores)
+  display_round_result(board)
   update_score!(scores, detect_winner(board))
+  display_scores(scores)
+  first_game = false
 
   if game_winner?(scores)
     prompt "#{detect_winner(board)} won the game!"
     prompt "Play again? (y or n)"
     answer = gets.chomp
     reset_scores!(scores)
+    first_game = true
     break unless answer.downcase.start_with?('y')
   else
     prompt "Get ready for the next round!"
