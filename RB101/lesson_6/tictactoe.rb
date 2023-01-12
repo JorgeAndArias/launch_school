@@ -20,7 +20,6 @@ def prompt(text)
   puts "=> #{text}"
 end
 
-# rubocop:disable Metrics/AbcSize
 def joinor(arr, delimiter=',', last_delimiter='or')
   result = ''
   arr.each do |element|
@@ -37,6 +36,7 @@ def joinor(arr, delimiter=',', last_delimiter='or')
   result
 end
 
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(brd, scores_hash)
   system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
@@ -55,7 +55,7 @@ def display_board(brd, scores_hash)
   puts "     |     |"
   puts ""
 end
-# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 def initialize_board
   new_board = {}
@@ -165,7 +165,7 @@ end
 
 # rubocop:disable Metrics/MethodLength
 def who_goes_first(first_time)
-  system 'clear' if !first_time
+  system 'clear' unless first_time
   first_turn = nil
   loop do
     prompt "Who should go first?"
